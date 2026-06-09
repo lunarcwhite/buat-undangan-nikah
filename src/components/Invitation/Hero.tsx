@@ -9,10 +9,11 @@ interface HeroProps {
 }
 
 export default function Hero({ contentData }: HeroProps) {
-  const bride = contentData.brideName || 'Bride';
-  const groom = contentData.groomName || 'Groom';
-  const dateStr = contentData.eventDate
-    ? new Date(contentData.eventDate).toLocaleDateString('id-ID', {
+  const bride = contentData.brideName || (contentData as any).bride_name || 'Bride';
+  const groom = contentData.groomName || (contentData as any).groom_name || 'Groom';
+  const rawDate = contentData.eventDate || (contentData as any).event_date;
+  const dateStr = rawDate
+    ? new Date(rawDate).toLocaleDateString('id-ID', {
         weekday: 'long',
         year: 'numeric',
         month: 'long',

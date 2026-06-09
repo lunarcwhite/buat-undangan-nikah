@@ -22,6 +22,7 @@ interface ThemeWrapperProps {
   themeConfig: {
     primaryColor?: string;
     fontFamily?: string;
+    backgroundColor?: string;
   };
   children: React.ReactNode;
 }
@@ -29,6 +30,7 @@ interface ThemeWrapperProps {
 export default function ThemeWrapper({ themeConfig, children }: ThemeWrapperProps) {
   const primaryColor = themeConfig.primaryColor || '#d97706';
   const fontFamily = themeConfig.fontFamily || 'sans';
+  const backgroundColor = themeConfig.backgroundColor || '#0f172a';
 
   // Map requested fonts to variables loaded via next/font
   let fontClass = inter.variable;
@@ -45,12 +47,13 @@ export default function ThemeWrapper({ themeConfig, children }: ThemeWrapperProp
   const wrapperStyle = {
     '--primary-color': primaryColor,
     '--font-sans': fontVarValue,
+    backgroundColor: backgroundColor,
   } as React.CSSProperties;
 
   return (
     <div
       style={wrapperStyle}
-      className={`${fontClass} min-h-screen bg-background text-foreground font-sans transition-colors duration-300`}
+      className={`${fontClass} min-h-screen text-slate-100 font-sans transition-colors duration-300`}
     >
       {children}
     </div>

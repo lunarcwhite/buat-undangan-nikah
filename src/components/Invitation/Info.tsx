@@ -11,10 +11,10 @@ interface InfoProps {
 }
 
 export default function Info({ contentData }: InfoProps) {
-  const name = contentData.locationName || 'Wedding Venue';
-  const address = contentData.locationAddress || 'Venue Address';
-  const time = contentData.eventTime || '10:00 - Finish';
-  const mapsUrl = contentData.locationMapsUrl || 'https://maps.google.com';
+  const name = contentData.locationName || (contentData as any).location_name || 'Wedding Venue';
+  const address = contentData.locationAddress || (contentData as any).location_address || 'Venue Address';
+  const time = contentData.eventTime || (contentData as any).event_time || '10:00 - Finish';
+  const mapsUrl = contentData.locationMapsUrl || (contentData as any).location_maps_url || 'https://maps.google.com';
 
   return (
     <section className="py-16 px-6 max-w-xl mx-auto text-center border-b border-muted">
