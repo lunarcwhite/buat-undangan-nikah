@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Sparkles, Heart, Smartphone, Music, CheckCircle } from 'lucide-react';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
           </span>
         </div>
         <div className="flex items-center gap-4">
+          <ThemeToggle />
           <Link
             href="/login"
             className="text-sm font-semibold text-slate-350 hover:text-white transition"

@@ -5,6 +5,7 @@ import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Loader2, LogOut, LayoutDashboard, User, Plus, Edit, Users, ExternalLink, Calendar, MapPin } from 'lucide-react';
+import ThemeToggle from '@/components/ThemeToggle';
 
 interface Invitation {
   id: string;
@@ -81,13 +82,16 @@ export default function DashboardPage() {
           <LayoutDashboard className="w-6 h-6" />
           Royal Invite
         </div>
-        <button
-          onClick={handleSignOut}
-          className="inline-flex items-center gap-2 bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground font-medium py-2 px-4 rounded-xl transition text-sm cursor-pointer border border-border"
-        >
-          <LogOut className="w-4 h-4" />
-          Sign Out
-        </button>
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
+          <button
+            onClick={handleSignOut}
+            className="inline-flex items-center gap-2 bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground font-medium py-2 px-4 rounded-xl transition text-sm cursor-pointer border border-border"
+          >
+            <LogOut className="w-4 h-4" />
+            Sign Out
+          </button>
+        </div>
       </header>
 
       {/* Main dashboard content */}
