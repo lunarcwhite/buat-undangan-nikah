@@ -24,8 +24,10 @@ export default function NewInvitationPage() {
         bride_name: 'Bride Name',
         groom_name: 'Groom Name',
         event_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] + 'T18:00', // 90 days out
+        event_time: '18:00 - Finish',
         location_name: 'Grand Ballroom, Plaza Hall',
-        location_link: 'https://maps.google.com',
+        location_address: '123 Wedding Ave, Jakarta',
+        location_maps_url: 'https://maps.google.com',
       };
 
       const defaultTheme = {

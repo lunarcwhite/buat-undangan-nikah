@@ -5,7 +5,7 @@ import ThemeToggle from '@/components/ThemeToggle';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-amber-500/30">
+    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-amber-500/30">
       {/* Background radial glow */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-amber-500/10 via-transparent to-transparent pointer-events-none" />
 
@@ -23,7 +23,7 @@ export default function Home() {
           <ThemeToggle />
           <Link
             href="/login"
-            className="text-sm font-semibold text-slate-350 hover:text-white transition"
+            className="text-sm font-semibold text-muted-foreground hover:text-foreground transition"
           >
             Sign In
           </Link>
@@ -38,7 +38,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <main className="max-w-7xl mx-auto px-6 pt-16 pb-24 flex flex-col items-center text-center relative z-10">
-        <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-xs text-amber-400 font-semibold mb-8">
+        <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-muted border border-border text-xs text-amber-500 font-semibold mb-8">
           <Sparkles className="w-4 h-4" />
           Create premium invitations in 5 minutes
         </div>
@@ -50,7 +50,7 @@ export default function Home() {
           </span>
         </h1>
 
-        <p className="text-lg md:text-xl text-slate-400 max-w-2xl mb-10 leading-relaxed">
+        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-10 leading-relaxed">
           Design beautiful, mobile-responsive invitations with dynamic themes, photo galleries, background music, and real-time RSVP log trackers.
         </p>
 
@@ -63,40 +63,40 @@ export default function Home() {
           </Link>
           <Link
             href="/login"
-            className="flex-1 bg-slate-900 hover:bg-slate-850 text-white font-semibold py-4 px-8 rounded-2xl transition border border-slate-850 text-center"
+            className="flex-1 bg-muted hover:bg-muted/80 text-foreground font-semibold py-4 px-8 rounded-2xl transition border border-border text-center"
           >
             Manage Invitations
           </Link>
         </div>
 
         {/* Feature Grid */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl text-left pt-12 border-t border-slate-900">
-          <div className="bg-slate-900/50 border border-slate-900 p-8 rounded-3xl backdrop-blur-sm">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-6">
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl text-left pt-12 border-t border-border">
+          <div className="bg-card/50 border border-border p-8 rounded-3xl backdrop-blur-sm shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 mb-6">
               <Smartphone className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-white mb-2">Mobile Responsive</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">
+            <h3 className="text-lg font-bold text-foreground mb-2">Mobile Responsive</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
               Designed first for mobile viewports, providing a smooth and premium scrolling experience for your guests.
             </p>
           </div>
 
-          <div className="bg-slate-900/50 border border-slate-900 p-8 rounded-3xl backdrop-blur-sm">
-            <div className="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 mb-6">
+          <div className="bg-card/50 border border-border p-8 rounded-3xl backdrop-blur-sm shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-500 mb-6">
               <Music className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-white mb-2">Audio Soundtrack</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">
+            <h3 className="text-lg font-bold text-foreground mb-2">Audio Soundtrack</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
               Enable romantic preset loops or direct MP3 custom audio tracks with elegant mute/play overlay triggers.
             </p>
           </div>
 
-          <div className="bg-slate-900/50 border border-slate-900 p-8 rounded-3xl backdrop-blur-sm">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-6">
+          <div className="bg-card/50 border border-border p-8 rounded-3xl backdrop-blur-sm shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 mb-6">
               <CheckCircle className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-white mb-2">Real-time RSVPs</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">
+            <h3 className="text-lg font-bold text-foreground mb-2">Real-time RSVPs</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
               Manage your guest wishes and attendance confirmation lists instantly via your dashboard logs.
             </p>
           </div>
@@ -104,7 +104,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="max-w-7xl mx-auto px-6 py-12 text-center text-xs text-slate-500 border-t border-slate-900">
+      <footer className="max-w-7xl mx-auto px-6 py-12 text-center text-xs text-muted-foreground border-t border-border">
         <p>© 2026 RoyalInvite. All rights reserved.</p>
       </footer>
     </div>

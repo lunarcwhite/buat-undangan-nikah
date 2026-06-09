@@ -21,7 +21,7 @@ const formSchema = z.object({
   event_date: z.string().min(1, 'Event date is required'),
   location_name: z.string().min(1, 'Location name is required'),
   location_address: z.string().min(1, 'Location address is required'),
-  location_maps_url: z.string().url('Must be a valid Google Maps URL'),
+  location_maps_url: z.string().url('Must be a valid Google Maps URL').or(z.literal('')),
   event_time: z.string().min(1, 'Time is required'),
   primaryColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Must be a valid hex color'),
   backgroundColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Must be a valid hex color'),
@@ -317,18 +317,23 @@ export default function EditInvitationPage() {
             <ArrowLeft className="w-4 h-4" />
             Dashboard
           </Link>
-          <button
-            onClick={handleSubmit(onSubmit)}
-            disabled={isSaving || slugStatus === 'taken'}
-            className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-slate-950 font-bold py-2.5 px-5 rounded-xl transition text-sm cursor-pointer shadow-lg shadow-amber-500/10"
-          >
-            {isSaving ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Save className="w-4 h-4" />
+          <div className="flex flex-col items-end gap-1">
+            <button
+              onClick={handleSubmit(onSubmit)}
+              disabled={isSaving || slugStatus === 'taken'}
+              className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-slate-950 font-bold py-2.5 px-5 rounded-xl transition text-sm cursor-pointer shadow-lg shadow-amber-500/10"
+            >
+              {isSaving ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Save className="w-4 h-4" />
+              )}
+              Save Configuration
+            </button>
+            {Object.keys(errors).length > 0 && (
+              <span className="text-rose-500 text-xs font-medium">Please fix form errors before saving</span>
             )}
-            Save Configuration
-          </button>
+          </div>
         </div>
 
         <h2 className="text-2xl font-bold tracking-tight text-white mb-6">Invitation Customizer</h2>
