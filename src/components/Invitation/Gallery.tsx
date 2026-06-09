@@ -10,6 +10,14 @@ interface GalleryProps {
 export default function Gallery({ galleryUrls }: GalleryProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
+  const handleNext = () => {
+    setActiveIndex((prev) => (prev === null ? null : (prev + 1) % galleryUrls.length));
+  };
+
+  const handlePrev = () => {
+    setActiveIndex((prev) => (prev === null ? null : (prev - 1 + galleryUrls.length) % galleryUrls.length));
+  };
+
   useEffect(() => {
     if (activeIndex === null) return;
 
@@ -21,17 +29,9 @@ export default function Gallery({ galleryUrls }: GalleryProps) {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeIndex, galleryUrls]);
+  }, [activeIndex, galleryUrls, handleNext, handlePrev]);
 
   if (!galleryUrls || galleryUrls.length === 0) return null;
-
-  const handleNext = () => {
-    setActiveIndex((prev) => (prev === null ? null : (prev + 1) % galleryUrls.length));
-  };
-
-  const handlePrev = () => {
-    setActiveIndex((prev) => (prev === null ? null : (prev - 1 + galleryUrls.length) % galleryUrls.length));
-  };
 
   return (
     <section className="py-16 px-6 max-w-2xl mx-auto border-b border-muted">

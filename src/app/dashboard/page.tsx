@@ -127,7 +127,7 @@ export default function DashboardPage() {
               </div>
               <h4 className="text-lg font-bold text-white mb-2">No invitations found</h4>
               <p className="text-sm text-slate-400 mb-6 max-w-sm">
-                Get started by creating your first wedding invitation. You can customize the couple's details, pick custom colors, and track RSVPs.
+                Get started by creating your first wedding invitation. You can customize the couple&apos;s details, pick custom colors, and track RSVPs.
               </p>
               <Link
                 href="/dashboard/invitations/new"

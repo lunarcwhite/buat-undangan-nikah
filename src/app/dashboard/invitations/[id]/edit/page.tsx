@@ -388,7 +388,7 @@ export default function EditInvitationPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-                    Bride's Name
+                    Bride&apos;s Name
                   </label>
                   <input
                     type="text"
@@ -400,7 +400,7 @@ export default function EditInvitationPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-                    Groom's Name
+                    Groom&apos;s Name
                   </label>
                   <input
                     type="text"
