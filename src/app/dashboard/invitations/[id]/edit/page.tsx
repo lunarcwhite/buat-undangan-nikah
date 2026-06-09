@@ -26,6 +26,10 @@ const formSchema = z.object({
   primaryColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Must be a valid hex color'),
   backgroundColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Must be a valid hex color'),
   fontFamily: z.enum(['sans', 'serif', 'outfit']),
+  cloudinary_cloud_name: z.string().optional(),
+  cloudinary_upload_preset: z.string().optional(),
+  gallery_urls: z.array(z.string()).optional(),
+  audio_url: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -51,6 +55,12 @@ const PRESETS = [
   },
 ];
 
+const AUDIO_PRESETS = [
+  { name: 'Classic Piano (Canon in D)', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+  { name: 'Romantic Strings', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
+  { name: 'Elegant Wedding March', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
+];
+
 export default function EditInvitationPage() {
   const params = useParams();
   const id = params.id as string;
@@ -63,6 +73,56 @@ export default function EditInvitationPage() {
 
   // Slug verification state
   const [slugStatus, setSlugStatus] = useState<'idle' | 'checking' | 'available' | 'taken'>('idle');
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setIsUploading(true);
+    const cloudName = watch('cloudinary_cloud_name') || 'dwedding-app';
+    const uploadPreset = watch('cloudinary_upload_preset') || 'invitations_unsigned';
+
+    try {
+      const uploadedUrls: string[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', uploadPreset);
+
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+          {
+            method: 'POST',
+            body: formData,
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data && data.secure_url) {
+            uploadedUrls.push(data.secure_url);
+          }
+        }
+      }
+
+      if (uploadedUrls.length > 0) {
+        const current = watch('gallery_urls') || [];
+        setValue('gallery_urls', [...current, ...uploadedUrls]);
+      }
+    } catch (err) {
+      console.error('Error uploading to Cloudinary:', err);
+      alert('Upload failed. Confirm your Cloud Name and Unsigned Preset settings.');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleDeleteImage = (indexToRemove: number) => {
+    const current = watch('gallery_urls') || [];
+    setValue('gallery_urls', current.filter((_, idx) => idx !== indexToRemove));
+  };
 
   const {
     register,
@@ -84,6 +144,10 @@ export default function EditInvitationPage() {
       primaryColor: '#f59e0b',
       backgroundColor: '#0f172a',
       fontFamily: 'serif',
+      cloudinary_cloud_name: 'dwedding-app',
+      cloudinary_upload_preset: 'invitations_unsigned',
+      gallery_urls: [],
+      audio_url: '',
     },
   });
 
@@ -126,6 +190,10 @@ export default function EditInvitationPage() {
       setValue('primaryColor', data.theme_config?.primaryColor || '#f59e0b');
       setValue('backgroundColor', data.theme_config?.backgroundColor || '#0f172a');
       setValue('fontFamily', data.theme_config?.fontFamily || 'serif');
+      setValue('cloudinary_cloud_name', data.content_data?.cloudinary_cloud_name || 'dwedding-app');
+      setValue('cloudinary_upload_preset', data.content_data?.cloudinary_upload_preset || 'invitations_unsigned');
+      setValue('gallery_urls', data.content_data?.gallery_urls || []);
+      setValue('audio_url', data.content_data?.audio_url || '');
 
       setIsLoading(false);
     }
@@ -176,6 +244,10 @@ export default function EditInvitationPage() {
       location_address: values.location_address,
       location_maps_url: values.location_maps_url,
       event_time: values.event_time,
+      cloudinary_cloud_name: values.cloudinary_cloud_name,
+      cloudinary_upload_preset: values.cloudinary_upload_preset,
+      gallery_urls: values.gallery_urls || [],
+      audio_url: values.audio_url,
     };
 
     const theme_config = {
@@ -406,6 +478,81 @@ export default function EditInvitationPage() {
                   {errors.location_maps_url && <p className="text-rose-450 text-xs mt-1">{errors.location_maps_url.message}</p>}
                 </div>
               </div>
+              {/* Photo Gallery & Cloudinary upload widget */}
+              <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-1.5">
+                  Photo Gallery Uploads (Cloudinary)
+                </h3>
+                
+                {/* Cloudinary credentials setup */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[10px] uppercase font-bold text-slate-500 mb-1">Cloud Name</label>
+                    <input
+                      type="text"
+                      {...register('cloudinary_cloud_name')}
+                      className="w-full bg-slate-950 border border-slate-850 rounded-lg py-1.5 px-2.5 text-xs text-slate-350 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] uppercase font-bold text-slate-500 mb-1">Unsigned Preset</label>
+                    <input
+                      type="text"
+                      {...register('cloudinary_upload_preset')}
+                      className="w-full bg-slate-950 border border-slate-850 rounded-lg py-1.5 px-2.5 text-xs text-slate-350 focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Upload picker */}
+                <div className="border border-dashed border-slate-800 rounded-xl p-6 text-center hover:border-slate-750 transition relative bg-slate-950/20">
+                  {isUploading ? (
+                    <div className="flex flex-col items-center justify-center gap-2 py-2">
+                      <Loader2 className="w-6 h-6 animate-spin text-amber-500" />
+                      <span className="text-xs text-slate-450 font-medium">Uploading images...</span>
+                    </div>
+                  ) : (
+                    <label className="cursor-pointer block py-2">
+                      <span className="bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs px-4 py-2 rounded-lg font-bold hover:bg-amber-500/15 transition">
+                        Select Photos
+                      </span>
+                      <span className="block text-[10px] text-slate-500 mt-3">Supports JPG, PNG, WEBP (multiple files)</span>
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handleUpload}
+                        className="hidden"
+                      />
+                    </label>
+                  )}
+                </div>
+
+                {/* Uploaded thumbnails list */}
+                {watchedValues.gallery_urls && watchedValues.gallery_urls.length > 0 && (
+                  <div>
+                    <div className="text-xs font-bold text-slate-450 mb-2">Uploaded Images ({watchedValues.gallery_urls.length})</div>
+                    <div className="grid grid-cols-4 gap-2">
+                      {watchedValues.gallery_urls.map((url, idx) => (
+                        <div key={idx} className="relative group aspect-square rounded-lg overflow-hidden border border-slate-850 bg-slate-950">
+                          <img
+                            src={url}
+                            alt={`Gallery ${idx + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteImage(idx)}
+                            className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-rose-400 font-bold transition text-xs cursor-pointer"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -493,6 +640,51 @@ export default function EditInvitationPage() {
                   <option value="serif">Elegant Serif (Playfair Display)</option>
                   <option value="outfit">Playful Sans-Serif (Outfit)</option>
                 </select>
+              </div>
+              {/* Background Music controls */}
+              <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+                  Background Music Track
+                </label>
+                <div className="space-y-3">
+                  <select
+                    value={
+                      AUDIO_PRESETS.some((p) => p.url === watchedValues.audio_url)
+                        ? watchedValues.audio_url
+                        : watchedValues.audio_url
+                        ? 'custom'
+                        : ''
+                    }
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === 'custom') {
+                        setValue('audio_url', 'https://');
+                      } else {
+                        setValue('audio_url', val);
+                      }
+                    }}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 px-3 text-sm focus:outline-none"
+                  >
+                    <option value="">No Background Music</option>
+                    <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">Classic Piano (Canon in D)</option>
+                    <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3">Romantic Strings</option>
+                    <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3">Elegant Wedding March</option>
+                    <option value="custom">Custom Audio URL...</option>
+                  </select>
+
+                  {/* Render text input if custom audio url option is selected */}
+                  {(!AUDIO_PRESETS.some((p) => p.url === watchedValues.audio_url) && watchedValues.audio_url && watchedValues.audio_url !== 'https://') || watchedValues.audio_url === 'https://' ? (
+                    <div>
+                      <label className="block text-[10px] uppercase font-bold text-slate-500 mb-1.5">Direct MP3 Link</label>
+                      <input
+                        type="text"
+                        {...register('audio_url')}
+                        placeholder="https://example.com/song.mp3"
+                        className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 px-3 text-sm focus:outline-none"
+                      />
+                    </div>
+                  ) : null}
+                </div>
               </div>
             </div>
           )}

@@ -5,6 +5,7 @@ import Hero from '@/components/Invitation/Hero';
 import Info from '@/components/Invitation/Info';
 import RSVPForm from '@/components/Invitation/RSVPForm';
 import Guestbook from '@/components/Invitation/Guestbook';
+import InvitationClientContainer from '@/components/Invitation/InvitationClientContainer';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -30,15 +31,18 @@ export default async function InvitationPage({ params }: Props) {
 
   return (
     <ThemeWrapper themeConfig={themeConfig}>
-      <main className="max-w-2xl mx-auto bg-card shadow-lg min-h-screen border-x border-muted">
-        <Hero contentData={contentData} />
-        
-        <Info contentData={contentData} />
-        
-        <RSVPForm invitationId={invitation.id} />
-        
-        <Guestbook invitationId={invitation.id} />
-      </main>
+      <InvitationClientContainer contentData={contentData} invitationId={invitation.id}>
+        <main className="max-w-2xl mx-auto bg-card shadow-lg min-h-screen border-x border-muted">
+          <Hero contentData={contentData} />
+          
+          <Info contentData={contentData} />
+          
+          <RSVPForm invitationId={invitation.id} />
+          
+          <Guestbook invitationId={invitation.id} />
+        </main>
+      </InvitationClientContainer>
     </ThemeWrapper>
   );
 }
+
